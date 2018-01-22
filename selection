@@ -1,0 +1,115 @@
+var anchor = d3.select("a");
+
+d3.selectAll("input[type=checkbox]").checked(true);
+
+var previous = d3.selectAll("p").select(function() {
+    return this.previousElementSibling;
+});
+
+var sibling = d3.selectAll("p").selectAll(function() {
+    return [
+        this.previousElementSibling,
+        this.nextElementSibling
+    ];
+});
+
+var even = d3.selectAll("tr").filter(":nth-child(even)");
+var even = d3.selectAll("tr:nth-child(even)");
+var even = d3.selectAll("tr").filter(function(d, i) { return i & 1; });
+var even = d3.selectAll("tr").select(function(d, i) { return i & 1 ? this : null; });
+
+//------------------------------------------------------------------------------------------
+//--------------------------------------------- Modifying Elements 
+//------------------------------------------------------------------------------------------
+
+selection.attr(name[, value])
+- 속성 적용 함수
+
+
+
+selection.classed(names[, value])
+- value 에 따라 클래스 적용/해제
+
+-- selection.classed("foo bar", true);
+-- selection.classed("foo bar", false);
+-- selection.classed("foo", function() { return Math.random() > 0.5; });
+
+
+
+selection.style(name[, value[, priority]])
+- style 적용 함수
+
+
+
+selection.property(name[, value])
+- form field 의 text, value, checked 설정 시 사용
+
+
+
+selection.text([value])
+
+
+
+selection.html([value])
+
+
+
+selection.append(type)
+-- d3.selectAll("p").append("div");
+-- d3.selectAll("p").append(function() {
+  return document.createElement("div");
+});
+-- d3.selectAll("p").select(function() {
+  return this.appendChild(document.createElement("div"));
+});
+
+
+
+selection.insert(type[, before])
+-- d3.selectAll("p").insert("div");
+-- d3.selectAll("p").insert(function() {
+  return document.createElement("div");
+});
+-- d3.selectAll("p").select(function() {
+  return this.insertBefore(document.createElement("div"), null);
+});
+
+
+
+selection.remove()
+
+
+
+selection.sort(compare)
+
+
+
+selection.order()
+
+
+
+selection.raise()
+-- selection.each(function() {
+  this.parentNode.appendChild(this);
+});
+
+
+
+selection.lower()
+-- selection.each(function() {
+  this.parentNode.insertBefore(this, this.parentNode.firstChild);
+});
+
+
+
+d3.creator(name)
+-- selection.append("div");
+-- selection.append(d3.creator("div"));
+
+
+
+//------------------------------------------------------------------------------------------
+//--------------------------------------------- Joining Data
+//------------------------------------------------------------------------------------------
+
+selection.data([data[, key]])
