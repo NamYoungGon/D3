@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>인구 분포</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/marx/2.0.7/marx.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Helvetica;
+        }
+
+        svg {
+            width: 500px;
+            height: 500px;
+        }
+
+        .top-label {
+            font-size: 13px;
+            font-style: italic;
+            text-transform: uppercase;
+            float: left;
+        }
+
+        .age-label {
+            text-align: right;
+            font-weight: bold;
+            width: 90px;
+            padding-right: 10px;
+        }
+
+        .clearfix {
+            clear: both;
+        }
+
+        .bar {
+            fill: darkslateblue;
+        }
+
+        .bar-label {
+            text-anchor: end;
+        }
+
+        .axis-label {
+            text-anchor: middle;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    
+    <h2>Age distribution of the world</h2>
+    <div class="top-label age-label">
+        <p>age group</p>
+    </div>
+    <div class="top-label">
+        <p>portion of the population</p>
+    </div>
+    <div class="clearfix"></div>
+    <svg>
+        <g transform="translate(100, 30) scale(43, 1)" class="bar">
+            <rect x="0" y="0" height="20" width="1.6" />
+            <rect x="0" y="25" height="20" width="1.5" />
+            <rect x="0" y="50" height="20" width="2.1" />
+            <rect x="0" y="75" height="20" width="2.6" />
+            <rect x="0" y="100" height="20" width="3.4" />
+            <rect x="0" y="125" height="20" width="4.5" />
+            <rect x="0" y="150" height="20" width="5.1" />
+            <rect x="0" y="175" height="20" width="6.0" />
+            <rect x="0" y="200" height="20" width="6.6" />
+            <rect x="0" y="225" height="20" width="7.1" />
+            <rect x="0" y="250" height="20" width="7.3" />
+            <rect x="0" y="275" height="20" width="8.1" />
+            <rect x="0" y="300" height="20" width="8.9" />
+            <rect x="0" y="325" height="20" width="8.8" />
+            <rect x="0" y="350" height="20" width="8.6" />
+            <rect x="0" y="375" height="20" width="8.8" />
+            <rect x="0" y="400" height="20" width="9.3" />
+        </g>
+    </svg>
+    <script>
+        // 자바스크립트 입력
+    </script>
+</body>
+</html>

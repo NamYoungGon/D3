@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>D3 tutorial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/marx/2.0.7/marx.min.css" rel="stylesheet" />
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <style>
+        svg text {
+            text-anchor: middle;
+            fill: lightgrey;
+        }
+
+        svg rect {
+            fill: crimson;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <svg width="500" height="500">
+        <text x="100" y="35">Text on bottom</text>
+        <rect x="0" y="0" width="200" height="60" />
+
+        <rect x="300" y="0" width="200" height="60" />
+        <text x="400" y="35">Text on bottom</text>
+    </svg>
+</body>
+</html>

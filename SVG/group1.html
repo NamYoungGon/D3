@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>D3 tutorial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/marx/2.0.7/marx.min.css" rel="stylesheet" />
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <style>
+        .blue-group {
+            fill: blue;
+            stroke-width: 3;
+        }
+
+        .red-group {
+            fill: red;
+            stroke-width: 4;
+            font-weight: bold;
+        }
+
+        .green-group {
+            fill: green;
+            stroke-width: 2;
+            font-family: Arial;
+            fill-opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <svg width="600" height="200">
+        <g class="blue-group">
+            <text x="0" y="20">Blue group</text>
+            <rect x="0" y="40" width="50" height="50" rx="10" ry="10" />
+            <polygon points="80, 30 70, 70 130, 50" />
+            <line x1="60" y1="75" x2="120" y2="90" stroke="blue" />
+        </g>
+        <g class="red-group">
+            <text x="200" y="20">Red group</text>
+            <rect x="200" y="40" width="50" height="50" rx="10" ry="10" />
+            <polygon points="280, 30 270, 70 330, 50" />
+            <line x1="260" y1="75" x2="320" y2="90" stroke="red" />
+        </g>
+        <g class="green-group">
+            <text x="400" y="20">Green group</text>
+            <rect x="400" y="40" width="50" height="50" rx="10" ry="10" />
+            <polygon points="480, 30 470, 70 530, 50" />
+            <line x1="460" y1="75" x2="520" y2="90" stroke="green" />
+        </g>
+    </svg>
+    <svg width="600" height="500">
+        <g class="blue-group" transform="scale(1.2)">
+            <text x="0" y="20">Blue group</text>
+            <rect x="0" y="40" width="50" height="50" rx="10" ry="10" />
+            <polygon points="80, 30 70, 70 130, 50" />
+            <line x1="60" y1="75" x2="120" y2="90" stroke="blue" />
+        </g>
+        <g class="red-group" transform="translate(200)">
+            <text x="0" y="20">Red group</text>
+            <rect x="0" y="40" width="50" height="50" rx="10" ry="10" />
+            <polygon points="80, 30 70, 70 130, 50" />
+            <line x1="60" y1="75" x2="120" y2="90" stroke="red" />
+        </g>
+        <g class="green-group" transform="translate(200, 120) rotate(90)">
+            <text x="0" y="20">Green group</text>
+            <rect x="0" y="40" width="50" height="50" rx="10" ry="10" />
+            <polygon points="80, 30 70, 70 130, 50" />
+            <line x1="60" y1="75" x2="120" y2="90" stroke="green" />
+        </g>
+    </svg>
+</body>
+</html>
