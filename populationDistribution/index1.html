@@ -85,7 +85,7 @@
         ];
 
         let barHeight = 20
-        let barGapY = 25
+        let barSpace = 25
 
         let svg = d3.select('body')
                     .append('svg')
@@ -99,7 +99,7 @@
             .enter()
                 .append('rect')
                 .attr('y', function (d, i) {
-                    return i * barGapY
+                    return i * barSpace
                 })
                 .attr('x', 0)
                 .attr('width', function (d) {
@@ -117,7 +117,7 @@
                 .append('text')
                 .attr('x', 90)
                 .attr('y', function (d, i) {
-                    return i * barGapY
+                    return i * barSpace
                 })
                 .text((function (d) {
                     return d.age
