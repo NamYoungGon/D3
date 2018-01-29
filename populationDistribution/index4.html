@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>D3 tutorial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/lib/marx.min.css" rel="stylesheet" />
+    <style>
+        svg {
+            margin: 0 auto;
+            display: block;
+        }
+
+        .axis {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/d3.min.js"></script>
+    
+    <script>
+        // 자바스크립트 입력
+        
+        // define margin
+        let margin = { top: 10, right: 10, bottom: 100, left: 50 },
+            width = 500 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom
+
+        // define svg
+        let svg = d3.select('body')
+                        .append('svg')
+                        .attr('width', width + margin.left + margin.right)
+                        .attr('height', height + margin.top + margin.bottom)
+                            .append('g')
+                            .attr('transform', `translate(${margin.left}, ${margin.top})`)
+
+        // define scale
+        let xScale = d3
+                        .scaleBand()
+                        .rangeRound([0, width])
+                        .padding(.2)
+
+        let yScale = d3
+                        .scaleLinear()
+                        .range([height, 0])
+
+        // define axis
+        let xAxis = d3.axisBottom(xScale)
+        let yAxis = d3.axisLeft(yScale)
+
+        // define scv
+        d3.csv('data.csv', function (error, data) {
+            if (error) throw error
+
+            data.forEach(function (d) {
+                d.population = +d.population
+                d.density = +d.density
+            })
+
+            xScale.domain(data.map(function (d) { return d.city }))
+            yScale.domain([0, d3.max(data, function (d) { return d.population })])
+
+            svg 
+                .append('g')
+                .selectAll('rect')
+                .data(data)
+                .enter()
+                    .append('rect')
+                    .attr('x', function (d) { return xScale(d.city) })
+                    .attr('y', height)
+                    .attr('width', function (d) { return xScale.bandwidth() })
+                    .transition()
+                    .duration(1500)
+                    .delay(function (d, i) { return 100 * i })
+                    .attr('y', function (d) { return yScale(d.population) })
+                    .attr('height', function (d) { return height - yScale(d.population) })
+                    .style('fill', function (d, i) { return `rgb(20, 20, ${100 + (20 * i)})` })
+
+            svg
+                .append('g')
+                .classed('y axis', true)
+                .call(yAxis)
+
+            svg
+                .append('g')
+                .classed('x axis', true)
+                .attr('transform', `translate(0, ${height})`)
+                .call(xAxis)
+                    
+        })
+                         
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>지역별 인구</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/marx/2.0.7/marx.min.css" rel="stylesheet" />
+    <style>
+        svg {
+            background-color: antiquewhite;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <script>
+        // 자바스크립트 입력
+        
+        let margin = { top: 20, right: 10, bottom: 100, left: 40},
+            width = 700 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom
+
+/*---------------------------------
+    define SVG
+---------------------------------*/
+        let svg = d3.select('body')
+                        .append('svg')
+                        .attr('width', width + margin.left + margin.right)
+                        .attr('height', height + margin.top + margin.bottom)
+                            .append('g')
+                            .attr('transform', `translate(${margin.left}, ${margin.right})`)
+
+
+        
+/*---------------------------------
+    define the x y scales
+---------------------------------*/
+        // let xScale = d3.scaleOrdinal()
+                        // .rangeRoundBands([0, width], 0.2, 0.2)
+        let xScale = d3.scaleBand()
+                        .rangeRound([0, width])
+                        .padding(0.2)
+        
+        let yScale = d3.scaleLinear()
+                        .range([height, 0])
+
+
+
+/*---------------------------------
+    define the x y axis
+---------------------------------*/
+        let xAxis = d3.axisBottom(xScale)
+        let yAxis = d3.axisLeft(yScale)
+
+
+
+/*---------------------------------
+    define call csv
+---------------------------------*/
+        d3.csv('data.csv', function (error, data) {
+            if (error) {
+                console.log('Error: data not loaded')
+            }
+
+            data.forEach(function (d) {
+                d.gdp = +d.gdp
+                d.country = d.country
+            })
+
+            data.sort(function (a, b) {
+                return b.gdp - a.gdp
+            })
+
+            // specify the domains of the x and y scales
+            xScale.domain(data.map(function (d) { return d.country }))
+            yScale.domain([0, d3.max(data, function (d) { return d.gdp })])
+
+            // draw the bars
+            svg.selectAll('rect')
+                .data(data)
+                .enter()
+                    .append('rect')
+                    .attr('height', 0)
+                    .attr('x', function (d) {
+                        return xScale(d.country)
+                    })
+                    .attr('y', height)
+                    .transition().duration(2000)
+                    .delay(function (d, i) {
+                        return i * 150
+                    })
+                    .attr('y', function (d) {
+                        return yScale(d.gdp)
+                    })
+                    // .attr('width', xScale.rangeBand())
+                    .attr('width', xScale.bandwidth())
+                    .attr('height', function (d) {
+                        return height - yScale(d.gdp)
+                    })
+                    .style('fill', function (d, i) { return `rgb(20, 20, ${(i * 30) + 100})` })
+
+            // label the bars
+            svg
+                .selectAll('text')
+                .data(data)
+                .enter()
+                    .append('text')
+                    .attr('x', function (d) {
+                        return xScale(d.country) + xScale.bandwidth() / 2
+                    })
+                    .attr('y', function (d) {
+                        return yScale(d.gdp) + 16
+                    })
+                    .text(function (d) {
+                        return d.gdp
+                    })
+                    .style('fill', 'white')
+                    .style('text-anchor', 'middle')
+
+
+                    
+
+            // draw the xAxis
+            svg
+                .append('g')
+                .classed('x axis', true)
+                .attr('transform', `translate(0, ${height})`)
+                .call(xAxis)
+                .selectAll('text')
+                .attr('transform', 'rotate(-60)')
+                .attr('dx', '-.8em')
+                .attr('dy', '-.25em')
+                .style('text-anchor', 'end')
+                .style('font-size', '12px')
+
+            // draw the yAxis
+            svg
+                .append('g')
+                .classed('y axis', true)
+                .call(yAxis)
+                .style('font-size', '12px')
+        })
+
+
+
+
+    </script>
+</body>
+</html>
