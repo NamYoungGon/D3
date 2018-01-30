@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>D3 tutorial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/lib/marx.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <style>
+    
+    </style>
+</head>
+<body>
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/d3.min.js"></script>
+    <div id="time" class="clear">
+            <span>Linear Time Progression<br></span>
+            <span>Mapping [01/01/2018, 12/31/2018] to [0, 1200]<br></span>
+        </div>
+    <script>
+        var start = new Date(2018, 0, 1), // <-A 
+            end = new Date(2018, 11, 31),
+            range = [0, 1200],
+            time = d3.scaleTime().domain([start, end]) // <-B
+                .rangeRound(range), // <-C
+            max = 12,
+            data = [];
+
+        for (var i = 0; i < max; ++i){ // <-D
+            var date = new Date(start.getTime());
+            date.setMonth(start.getMonth() + i);
+            data.push(date);
+        }
+
+        function render(data, scale, selector) { // <-E
+            d3.select(selector).selectAll("div.fixed-cell")
+                        .data(data)
+                    .enter()
+                        .append("div").classed("fixed-cell", true);
+
+            d3.select(selector).selectAll("div.fixed-cell")
+                        .data(data)
+                    .exit().remove();
+
+            d3.select(selector).selectAll("div.fixed-cell")
+                        .data(data)
+                    .style("margin-left", function(d){ // <-F
+                        return scale(d) + "px";
+                    })
+                    .html(function (d) { // <-G
+                        var format = d3.timeFormat("%x"); // <-H
+                        return format(d) + "<br>" + scale(d) + "px";
+                    });
+        }
+
+        render(data, time, "#time");
+    </script>
+</body>
+</html>
