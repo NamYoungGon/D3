@@ -69,7 +69,6 @@
                     .classed("cell", true)
                     .style("display", "inline-block")
                     .style("background-color", function(d){  // <-D
-                    console.log(scale(d))
                         return scale(d).indexOf("#")>=0?scale(d):"white";
                     })
                     .text(function (d) { // <-E
