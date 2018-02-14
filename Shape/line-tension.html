@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>D3 tutorial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/styles.css" rel="stylesheet" />
+    <style>
+
+    </style>
+</head>
+<body>
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/d3.min.js"></script>
+    <h4>Interpolation Mode:</h4>
+    <div class="control-group">
+        <button onclick="render(d3.curveLinear)">linear</button>
+        <button onclick="render(d3.curveLinearClosed)">linear-closed</button>
+        <button onclick="render(d3.curveStepBefore)">step-before</button>
+        <button onclick="render(d3.curveStepAfter)">step-after</button>
+        <button onclick="render(d3.curveBasis)">basis</button>
+        <button onclick="render(d3.curveBasisOpen)">basis-open</button>
+    </div>
+    <div class="control-group">
+        <button onclick="render(d3.curveBasisClosed)">basis-closed</button>
+        <button onclick="render(d3.curveBundle)">bundle</button>
+        <button onclick="render(d3.curveCardinal)">cardinal</button>
+        <button onclick="render(d3.curveCardinalOpen)">cardinal-open</button>
+        <button onclick="render(d3.curveCardinalClosed)">cardinal-closed</button>
+        <button onclick="render('monotone')">monotone</button>    
+    </div>
+    <script>
+        // 자바스크립트 입력
+        var width = 500,
+        height = 500,
+        margin = 30,
+        duration = 500,    
+        x = d3.scaleLinear()
+            .domain([0, 10])
+            .range([margin, width - margin]),
+        y = d3.scaleLinear()
+            .domain([0, 1])
+            .range([height - margin, margin]);
+        
+    var data = d3.range(10).map(function(i){
+            return {x: i, y: (Math.sin(i * 3) + 1) / 2};
+        });
+    
+    var svg = d3.select("body").append("svg");
+    
+    svg.attr("height", height)
+        .attr("width", width);
+        
+    renderAxes(svg);
+        
+    render([1]);    
+    
+    function render(tension){
+        var line = d3.line()
+                .curve(d3.curveCardinal)
+                .x(function(d){return x(d.x);})
+                .y(function(d){return y(d.y);});
+                
+        svg.selectAll("path.line")
+                .data(tension)
+            .enter()
+                .append("path")
+                .attr("class", "line");            
+                
+        // svg.selectAll("path.line")
+        //         .data(tension) // <-A                    
+        //     .transition().duration(duration).ease(d3.easeLinear) // <-B
+        //     .attr("d", function(d){
+        //         return line.tension(d)(data); // <-C
+        //     });
+            
+        svg.selectAll("circle")
+            .data(data)
+          .enter().append("circle")
+            .attr("class", "dot")
+            .attr("cx", function(d) { return x(d.x); })
+            .attr("cy", function(d) { return y(d.y); })
+            .attr("r", 4.5);
+    }
+    
+    function renderAxes(svg){            
+        var xAxis = d3.axisBottom()                
+                .scale(d3.scaleLinear().domain([0, 10]).range([0, quadrantWidth()]))
+
+        var yAxis = d3.axisLeft()
+                .scale(d3.scaleLinear().domain([0, 1]).range([quadrantHeight(), 0]))
+        
+        svg.append("g")        
+            .attr("class", "axis")
+            .attr("transform", function(){
+                return "translate(" + xStart() + "," + yStart() + ")";
+            })
+            .call(xAxis);
+            
+        svg.append("g")        
+            .attr("class", "axis")
+            .attr("transform", function(){
+                return "translate(" + xStart() + "," + yEnd() + ")";
+            })
+            .call(yAxis);
+    }
+        
+    function xStart(){
+        return margin;
+    }        
+    
+    function yStart(){
+        return height - margin;
+    }
+    
+    function xEnd(){
+        return width - margin;
+    }
+    
+    function yEnd(){
+        return margin;
+    }
+    
+    function quadrantWidth(){
+        return width - 2 * margin;
+    }
+    
+    function quadrantHeight(){
+        return height - 2 * margin;
+    }
+    </script>
+</body>
+</html>

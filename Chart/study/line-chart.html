@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>D3 tutorial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/styles.css" rel="stylesheet" />
+    <style>
+
+    </style>
+</head>
+<body>
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/d3.min.js"></script>
+
+    <div class="control-group">
+        <button onclick="update()">Update</button>
+    </div>
+
+    <script>
+
+        function lineChart() {
+            let _chart = {}
+
+            let margin = { top: 30, left: 30, right: 30, bottom: 30 },
+                _width = 600 - margin.left - margin.right,
+                _height = 300 - margin.top - margin.bottom,
+                _data = [],
+                _colors = d3.scaleOrdinal(d3.schemaCategory10),
+                _svg,
+                _bodyG,
+                _line,
+
+                _x,
+                _y
+
+            _chart.render = function () {
+                if (!_svg) {
+                    _svg = d3.select('body')
+                                .append('svg')
+                                .attr('width', _width + margin.left + margin.right)
+                                .attr('height', _height + margin.top + margin.bottom)
+                                    .append('g')
+                                    .attr('transform', `translate(${margin.left}, ${margin.top})`)
+
+                    renderAxes(_svg)
+                }
+
+                renderBody(_svg)
+            }
+
+            function renderAxes(svg) {
+                let axesG = svg
+                                .append('g')
+                                .classed('axes', true)
+
+                renderXAxis(axesG)
+                renderYAxis(axesG)
+            }
+
+            function renderXAxis(axesG) {
+                let xAxis = d3.axisBottom().scale(_x.range([0, _width]))
+
+                axesG
+                        .append('g')
+                        .classed('x axis', true)
+                        .call(xAxis)
+                        .attr('transform', `translate(0, ${_height})`)
+
+                d3
+                    .selectAll('g.x g.tick')
+                        .append('line')
+                        .classed('grid-line', true)
+                        .attr('x1', 0)
+                        .attr('y1', 0)
+                        .attr('x2', 0)
+                        .attr('y2', -_height)
+            }
+
+            function renderYAxis(axesG) {
+                let yAxis = d3.axisLeft().scale(_y.range([_height, 0]))
+
+                axesG
+                        .append('g')
+                        .classed('y axis', true)
+                        .call(yAxis)
+
+                d3 
+                    .selectAll('g.y g.tick')
+                        .append('line')
+                        .classed('grid-line', true)
+                        .attr('x1', 0)
+                        .attr('y1', 0)
+                        .attr('x2', _width)
+                        .attr('y2', 0)
+            }
+
+            function renderBody(svg) {
+                if (!_bodyG) {
+                    _bodyG = svg
+                                .append('g')
+                                .classed('body', true)
+                }
+
+                renderLines()
+                renderDots()
+            }
+
+            function renderLines() {
+                _line = d3.line()
+                                .x(function (d) { return _x(d.x) })
+                                .y(function (d) { return _y(d.y) })
+
+                _bodyG.selectAll('path.line')
+                            .data(_data)
+                            .enter()
+                                .append('path')
+                                .classed('line', true)
+                                .style('stroke', function (d, i) {
+                                    return _colors(i)
+                                })
+
+                _bodyG.selectAll('path.line')
+                            .data(_data)
+                            .transition()
+                            .attr('d', function (d) { return _line(d) })
+            }
+
+            function renderDots() {
+                _data.forEach(function (list, i) {
+                    _bodyG.selectAll('circle._' + i)
+                            .data(list)
+                            .enter()
+                                .append('circle')
+                                .classed('dot _' + i, true)
+
+                    _bodyG.selectAll('circle._' + i)
+                            .data(list)
+                            .style("stroke", function (d) { 
+                                return _colors(i); //<-4F
+                            })
+                            .transition() //<-4G
+                            .attr("cx", function (d) { return _x(d.x); })
+                            .attr("cy", function (d) { return _y(d.y); })
+                            .attr("r", 4.5);
+
+                })
+            }
+
+            _chart.x = function (x) {
+                _x = x
+                return _chart
+            }
+
+            _chart.y = function (y) {
+                _y = y
+                return _chart
+            }
+
+            _chart.addSeries = function (series) {
+                _data.push(series)
+                return _chart
+            }
+
+            return _chart
+        }
+
+        function randomData() {
+            return Math.random() * 10
+        }
+
+        function update() {
+            for (let i = 0; i < data.length; i++) {
+                let series = data[i]
+                series.length = 0
+
+                for (let j = 0; j < numberOfDataPoint; j++) {
+                    series.push({ x: j, y: randomData() })
+                }
+            }
+
+            chart.render()
+        }
+
+        let numberOfSeries = 2,
+            numberOfDataPoint = 11,
+            data = []
+
+        for (let i = 0; i < numberOfSeries; i++) {
+            data.push(d3.range(numberOfDataPoint).map(function (value, index) {
+                return { x: index, y: randomData() }
+            }))
+        }
+        
+        var chart = lineChart()
+                        .x(d3.scaleLinear().domain([0, 10]))
+                        .y(d3.scaleLinear().domain([0, 10]))
+            
+        data.forEach(function (series) {
+            chart.addSeries(series)
+        })
+
+        chart.render()
+
+    </script>
+</body>
+</html>

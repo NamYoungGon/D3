@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>D3 tutorial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/styles.css" rel="stylesheet" />
+    <style>
+
+    </style>
+</head>
+<body>
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/d3.min.js"></script>
+
+    <div class="control-group">
+        <button onclick="update()">Update</button>
+    </div>
+
+    <script>
+
+        function lineChart() {
+
+            let _chart = {}
+
+            let _svg,
+                _bodyG,
+                _axesG,
+
+                _line,
+
+                _x,
+                _y,
+
+                margin = { top: 30, right: 30, bottom: 30, left: 30 }
+                _width = 600 - margin.left, - margin.right,
+                _height = 300 - margin.top, - margin.bottom,
+
+                _data = []
+
+            _chart.render = function () {
+                if (!_svg) {
+                    _svg = d3.select('body')
+                                .append('svg')
+                                .attr('width', _width + margin.left + margin.right)
+                                .attr('height', _height + margin.top + margin.bottom)
+                                    .append('g')
+                                    .attr('transform', `translate(${margin.left}, ${margin.top})`)
+
+                    renderAxes(_svg)
+                    renderBody(_svg)
+                }
+            }
+
+            function renderAxes(svg) {
+                if (!_axesG) {
+                    _axesG = svg
+                                .append('g')
+                                .classed('axes', true)
+                }
+
+                renderXAxis(_axesG)
+                renderYAxis(_axesG)
+            }
+            function renderXAxis(axesG) {
+                let xAxis = d3.axisBottom().scale(_x.range([0, _width]))
+
+                axesG
+                        .append('g')
+                        .classed('x axis', true)
+                        .attr('transform', `translate(0, ${_height})`)
+                        .call(xAxis)
+            }
+
+            function renderYAxis(axesG) {
+                let yAxis = d3.axisLeft().scale(_x.range([_height, 0]))
+
+                axesG
+                        .append('g')
+                        .classed('y axis', true)
+                        .call(yAxis)
+            }
+
+            function renderBody(svg) {
+                if (!_bodyG) {
+                    _bodyG = svg
+                                .append('g')
+                                .classed('body', true)
+                }
+
+                renderLine(_bodyG)
+            }
+
+            function renderLine(bodyG) {
+                _line = d3.line()
+                                .x(function (d) { return _x(d.x) })
+                                .y(function (d) { return _x(d.y) })
+
+                bodyG.selectAll('path.line')
+                        .data(_data)
+                        .enter()
+                            .append('path')
+                            .classed('line', true)
+
+                bodyG.selectAll('path.line')
+                        .data(_data)
+                        .attr('d', function (d) { return _line(d) })
+
+            }
+
+            _chart.addData = function (_d) {
+                _data.push(_d)
+
+                return _chart
+            }
+
+            _chart.x = function (x) {
+                _x = x
+                return _chart
+            }
+
+            _chart.y = function (y) {
+                _y = y
+                return _chart
+            }
+
+            return _chart
+        }
+
+        function randomData() {
+            return Math.random() * 10
+        }
+
+        let lineCnt = 2,
+            lineDataPoint = 11,
+            data = []
+
+        for (let i = 0; i < lineCnt; i++) {
+            data.push(d3.range(lineDataPoint).map(function (value, index) {
+                return { x: index, y: randomData() }
+            }))
+        }
+
+        let chart = lineChart()
+        chart.addData(data)
+                .x(d3.scaleLinear().domain([0, 10]))
+                .y(d3.scaleLinear().domain([0, 10]))
+        
+
+        chart.render()
+
+    </script>
+</body>
+</html>
