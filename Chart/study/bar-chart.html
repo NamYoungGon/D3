@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>D3 tutorial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/styles.css" rel="stylesheet" />
+    <style>
+
+    </style>
+</head>
+<body>
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/d3.min.js"></script>
+
+    <div class="control-group">
+        <button onclick="update()">Update</button>
+    </div>
+
+    <script>
+
+        function barChart() {
+            let _chart = {}
+
+            let _svg,
+                _margin = { top: 30, right: 30, bottom: 30, left: 30 },
+                _width = 600 - _margin.left - _margin.right,
+                _height = 400 - _margin.top - _margin.bottom,
+
+                _axesG,
+                _bodyG,
+
+                _x,
+                _y,
+
+                _data
+
+            _chart.render = function () {
+                if (!_svg) {
+                    _svg = d3.select('body')
+                                .append('svg')
+                                .attr('height', _height + _margin.top + _margin.bottom)
+                                .attr('width', _width + _margin.left + _margin.right)
+                                    .append('g')
+                                    .attr('transform', `translate(${_margin.left}, ${_margin.top})`)
+
+                    renderAxes(_svg)
+                }
+            }
+
+            function renderAxes(svg) {
+                _axesG = svg
+                            .append('g')
+                            .classed('axes')
+
+                renderXAxis(_axesG)
+                renderYAxis(_axesG)
+            }
+
+            function renderXAxis(axesG) {
+                let xAxis = d3.axisBottom().scale()
+                // axesG.
+                        
+            }
+
+            function renderYAxis(axesG) {
+                let yAxis = d3.axisLeft().scale()
+
+            }
+
+            _chart.y = function (x) {
+                x = x
+
+                return _chart
+            }
+
+            _chart.y = function (y) {
+                y = y
+
+                return _chart
+            }
+
+            return _chart
+        }
+
+        let _barChart = barChart()
+                            .x(d3.scaleLinear().domain([0, 30]))
+                            .y(d3.scaleLinear().domain([0, 10]))
+
+        function randomValue() {
+            return Math.random * 30
+        }
+
+        d3.range(30).forEach(function () {
+            return 
+        })
+
+        _barChart.render()
+
+    </script>
+</body>
+</html>

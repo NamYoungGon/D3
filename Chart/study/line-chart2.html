@@ -33,6 +33,8 @@
                 _x,
                 _y,
 
+                _colors = d3.scaleOrdinal(d3.schemeCategory10),
+
                 margin = { top: 30, right: 30, bottom: 30, left: 30 }
                 _width = 600 - margin.left, - margin.right,
                 _height = 300 - margin.top, - margin.bottom,
@@ -49,8 +51,8 @@
                                     .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
                     renderAxes(_svg)
-                    renderBody(_svg)
                 }
+                renderBody(_svg)
             }
 
             function renderAxes(svg) {
@@ -74,7 +76,7 @@
             }
 
             function renderYAxis(axesG) {
-                let yAxis = d3.axisLeft().scale(_x.range([_height, 0]))
+                let yAxis = d3.axisLeft().scale(_y.range([_height, 0]))
 
                 axesG
                         .append('g')
@@ -90,12 +92,13 @@
                 }
 
                 renderLine(_bodyG)
+                renderAreas(_bodyG)
             }
 
             function renderLine(bodyG) {
                 _line = d3.line()
                                 .x(function (d) { return _x(d.x) })
-                                .y(function (d) { return _x(d.y) })
+                                .y(function (d) { return _y(d.y) })
 
                 bodyG.selectAll('path.line')
                         .data(_data)
@@ -106,7 +109,27 @@
                 bodyG.selectAll('path.line')
                         .data(_data)
                         .attr('d', function (d) { return _line(d) })
+            }
 
+            function renderAreas(bodyG) {
+                var area = d3.area() // <-A
+                            .x(function(d) { return _x(d.x); })
+                            .y0(_height)
+                            .y1(function(d) { return _y(d.y); });
+                            bodyG.selectAll("path.area")
+                        .data(_data)
+                        .enter() // <-B
+                        .append("path")
+                        .style("fill", function (d, i) { 
+                            return _colors(i); 
+                        })
+                        .attr("class", "area");
+                    bodyG.selectAll("path.area")
+                        .data(_data)
+                        // .transition() // <-D
+                        .attr("d", function (d) { 
+                            return area(d); // <-E
+                        });
             }
 
             _chart.addData = function (_d) {
@@ -132,6 +155,20 @@
             return Math.random() * 10
         }
 
+        function update() {
+            for (let i = 0; i < data.length; i++) {
+                let series = data[i]
+
+                series.length = 0
+
+                for (let j = 0; j < lineDataPoint; j++) {
+                    series.push({ x: j, y: randomData() })
+                }
+            }
+
+            chart.render()
+        }
+
         let lineCnt = 2,
             lineDataPoint = 11,
             data = []
@@ -143,9 +180,12 @@
         }
 
         let chart = lineChart()
-        chart.addData(data)
                 .x(d3.scaleLinear().domain([0, 10]))
                 .y(d3.scaleLinear().domain([0, 10]))
+
+        data.forEach(function (series) {
+            chart.addData(series)
+        })
         
 
         chart.render()

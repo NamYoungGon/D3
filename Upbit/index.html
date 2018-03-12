@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>D3 tutorial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/lib/marx.min.css" rel="stylesheet" />
+    <style>
+        .opening-line {
+            stroke: black;
+            shape-rendering: crispEdges;
+            visibility: hidden;
+        }
+        .opening-line.same {
+            visibility: visible;
+        }
+
+        .highlow-line {
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+
+        rect.plus {
+            fill: #1a7d34;
+        }
+        rect.minus {
+            fill: #ce3535;
+        }
+
+        select {
+            height: 33px;
+        }
+    </style>
+</head>
+<body>
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/d3.min.js"></script>
+    <script src="chart.js"></script>
+    
+    <select id="coin">
+        <option value="XRP" selected="selected">리플</option>
+        <option value="BTC">비트코인</option>
+    </select>
+
+    <select id="minutes">
+        <option value="1">1분</option>
+        <option value="5" selected="selected">5분</option>
+        <option value="15">15분</option>
+        <option value="30">30분</option>
+    </select>
+
+    <script>
+        let chart = new Chart({
+            coin: 'XRP',
+            minutes: '5'
+        });
+
+        coin.addEventListener('change', function (e) {
+            chart.setCoin(e.target.value)
+        })
+        
+        minutes.addEventListener('change', function (e) {
+            chart.setMinutes(e.target.value)
+        })
+    </script>
+</body>
+</html>
